@@ -21,8 +21,8 @@ import { UiModule } from './ui/ui.module';
     useFactory: async (configService: ConfigService) => ({
       uri: configService.get<string>('MONGO_URL'),
     }),
-  }),UserModule, AuthModule, TodoModule, UiModule],
-  controllers: [AppController, UserController, TodoController, UIController],
-  providers: [AppService, TodoService],
+  }),UserModule, AuthModule, TodoModule, UiModule, TodoModule],
+  controllers: [AppController, UserController, UIController],
+  providers: [AppService, ],
 })
 export class AppModule {}

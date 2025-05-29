@@ -5,12 +5,19 @@ import {
     Res,
     HttpCode,
     HttpStatus,
+    UseGuards,
+    Get,
+    Req,
   } from '@nestjs/common';
   import { Response } from 'express';
   import { SignInDto } from '../dto/signIn.dto';
   import { UserService } from '../user/user.service';
   import { AuthService } from './auth.service';
   import { LogInDto } from 'src/dto/logIn.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './jwt/jwt.guard';
+import { Request } from 'express';
+import { UserDocument } from 'src/user/schemas/user.schema';
   
   @Controller('auth')
   export class AuthController {
@@ -55,4 +62,18 @@ import {
 
     return { message: 'User logged in', userId: user._id };
   }
+  
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getMe(@Req() req: Request & { user: UserDocument }) {
+    const user = await this.userService.findByEmail(req.user.email);
+    return  user 
+   }
+
+   @Post('logout')
+    logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token'); // або як у тебе називається кука
+    return { message: 'Logged out successfully' };
 }
+} 
+

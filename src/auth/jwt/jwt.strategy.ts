@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 const sercet = process.env.JWT_SECRET;
 
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
@@ -10,11 +11,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req) => req.cookies?.token,
       ]),
-      secretOrKey: sercet || 'default',
+      secretOrKey: sercet || 'TcAmns0nPzVuT3rGCbmvrlWl8V0U',
     });
   }
 
   async validate(payload: any) {
-    return { identifier: payload.identifier };
-  }
+    console.log('JWT payload:', payload);
+    return { _id: payload.sub, email: payload.email };
+}
 }

@@ -45,8 +45,34 @@ export class UserService {
         return this.userModel.findOne({ email }).exec();
   }
 
+  async findById(id: string): Promise<UserDocument | null> {
+    console.log(`Finding user by ID: ${id}`);
+    const user = await this.userModel.findById(id).exec();
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return user;
+  }
+
   async findAll (): Promise<UserDocument[]> {
     return this.userModel.find().exec();
   }
 
+  async updateUserRole(id: string, role: string): Promise<UserDocument> {
+    const user = await this.userModel.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true }
+    ).exec();
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
+
+  async deleteUser(id: string) {
+    await this.userModel.findByIdAndDelete(
+      id
+    ).exec();
+  }
 }
