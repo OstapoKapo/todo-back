@@ -31,7 +31,6 @@ export class TodoController {
   }
   
   @Get(':id')
-  @Roles('admin', 'editor')
   findOne(@Param('id') id: string) {
     return this.todoService.findById(id);
   }
