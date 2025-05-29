@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:8000'], // Дозвольте ваш фронтенд та Swagger UI
+    origin: ['http://localhost:3000', 'http://localhost:8000', "https://todo-back-lw7k.onrender.com/"],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
