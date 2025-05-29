@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
+import { Roles } from 'src/auth/jwt/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -12,7 +13,6 @@ export class UserController {
         const users = await this.userService.findAll();
         return { message: 'all users', users: users };
     }
-
     @Patch('/:id')
     @HttpCode(HttpStatus.OK)
     async updateUserRole(@Param('id') id: string, @Body('role') role: string) {
@@ -20,6 +20,7 @@ export class UserController {
         return { message: 'user role updated', user: updatedUser };
     }
 
+    @Roles('admin')
     @Delete('/:id')
     @HttpCode(HttpStatus.OK)
     async deleteUser(@Param('id') id: string) {

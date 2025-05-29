@@ -15,9 +15,10 @@ import {
   import { AuthService } from './auth.service';
   import { LogInDto } from 'src/dto/logIn.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from './jwt/jwt.guard';
+import { RolesGuard } from './jwt/jwt.guard';
 import { Request } from 'express';
 import { UserDocument } from 'src/user/schemas/user.schema';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
   
   @Controller('auth')
   export class AuthController {
@@ -62,7 +63,7 @@ import { UserDocument } from 'src/user/schemas/user.schema';
 
     return { message: 'User logged in', userId: user._id };
   }
-  
+
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMe(@Req() req: Request & { user: UserDocument }) {
