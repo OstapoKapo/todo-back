@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { Todo } from './schemas/todo.schema';
 import {CreateTodoDto} from '../dto/createTodo.dto';
 import { Roles } from 'src/auth/jwt/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/jwt/jwt.guard';
 
 
 interface createTodo {
@@ -12,6 +14,7 @@ interface createTodo {
     createdTime?: number;
 }
 @Controller('todos')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
@@ -27,20 +30,21 @@ export class TodoController {
     return this.todoService.findAll();
   }
   
-  @Roles('admin', 'editor')
   @Get(':id')
+  @Roles('admin', 'editor')
   findOne(@Param('id') id: string) {
     return this.todoService.findById(id);
   }
 
-  @Roles('admin', 'editor')
+
   @Patch(':id')
+  @Roles('admin', 'editor')
   update(@Param('id') id: string, @Body() updateData: Partial<Todo>) {
     return this.todoService.update(id, updateData);
   }
 
-  @Roles('admin')
   @Delete(':id')
+  @Roles('admin')
   delete(@Param('id') id: string) {
     this.todoService.delete(id);
     return this.todoService.findAll();
