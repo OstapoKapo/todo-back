@@ -8,10 +8,21 @@ import { AuthModule } from './auth/auth.module';
 import { TodoService } from './todo/todo.service';
 import { TodoController } from './todo/todo.controller';
 import { TodoModule } from './todo/todo.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UIController } from './ui/ui.controller';
+import { UIService } from './ui/ui.service';
+import { UiModule } from './ui/ui.module';
 
 @Module({
-  imports: [UserModule, AuthModule, TodoModule],
-  controllers: [AppController, UserController, TodoController],
-  providers: [AppService, UserService, TodoService],
+  imports: [MongooseModule.forRootAsync({
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => ({
+      uri: configService.get<string>('MONGO_URL'),
+    }),
+  }),UserModule, AuthModule, TodoModule, UiModule],
+  controllers: [AppController, UserController, TodoController, UIController],
+  providers: [AppService, TodoService],
 })
 export class AppModule {}
